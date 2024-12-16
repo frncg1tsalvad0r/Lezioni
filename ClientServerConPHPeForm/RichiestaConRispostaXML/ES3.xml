@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<studenti>
+    <studente>
+        <nome>
+            Mario
+        </nome>
+        <cognome>
+            Milani
+        </cognome>
+        <eta>
+            22
+        </eta>
+		<residenza>
+			<via>
+				Via Roma, 9
+			</via>
+			<citta>
+				Cittadella
+			</citta>
+		</residenza>
+    </studente>
+    <studente>
+        <nome>
+            Anna
+        </nome>
+        <cognome>
+            Rossi
+        </cognome>
+        <eta>
+            44
+        </eta>
+		<residenza>
+			<via>
+				Via Napoli, 5
+			</via>
+			<citta>
+				Tombolo
+			</citta>
+		</residenza>
+    </studente>
+</studenti>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function caricato() {
+            // Codice eseguito al caricamento della pagina
+           
+            let modulo = document.getElementById('modulo');
+            let FD = new FormData();
+
+            modulo.addEventListener('submit', function (event) {
+                
+                const xhr = new XMLHttpRequest();
+
+                xhr.onload = function () {
+                    //Richiamata quando il server risponde
+                    alert(xhr.responseText);
+                }
+
+                let mioNome = document.getElementById('mioNome');
+                let mioCognome = document.getElementById('mioCognome');
+                let mioEta = document.getElementById('miaEta');
+                FD.append('nome', mioNome.value);
+                FD.append('cognome', mioCognome.value);
+                FD.append('eta', miaEta.value);
+
+                xhr.open('POST', 'ES5.php');
+                xhr.send(FD);
+            });
+        }
+
+        
+    </script>
+</head>
+<body onload="caricato()">
+    <form id="modulo" method="POST">
+        <label for="mioNome">Nome: </label>
+        <input id="mioNome" type="text" name="nome"><br><br>
+        <label for="mioCognome">Cognome: </label>
+        <input id="mioCognome" type="text" name="cognome"><br><br>
+        <label for="miaEta">Eta: </label>
+        <input id="miaEta" type="number" min="0" name="eta"><br><br>
+        <input type="submit" value="Invia">
+       
+    </form>
+</body>
+</html>

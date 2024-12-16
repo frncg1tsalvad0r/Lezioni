@@ -1,0 +1,326 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+PER IL CORSO SEVE UNA SCHEDINA RASPBERRY PI (La zero costa poco)
+Se volete comperarvi la scheda costa qualche caffè. Se poi la comperate assieme e risparmiate
+anche sulle spese di spedizione.
+https://www.kubii.fr/les-cartes-raspberry-pi/1851-raspberry-pi-zero-w-kubii-3272496006997.html
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+SE NON AVETE LA SCHEDINA..... FACCIAMO FINTA DI AVERLA
+Scaricate la Virtual Box dal sito di Oracle https://www.virtualbox.org/wiki/Downloads.
+Su questa faremo funzionare lo stesso sisema operativo che funzionerà sulla RaspberryPI
+
+
+Scaricare RaspberryPiOS (x86) dal sito 
+https://www.raspberrypi.org/downloads/ 
+e selezionare Raspberry PI Desktop
+2020-02-12-rpd-x86-buster.iso
+
+CREA UNA NUOVA MACCHINA VIRTUALE IN VIRTUAL BOX 
+NOME: 2020-02-12-rpd-x86-buster 
+TIPO: linux, 
+ARCH: x86_64
+OPZIONI: Crea subito disco fisso virtuale 
+
+DIMENSIONE 16GB
+VDI allocato dinamicamente
+
+UNA VOLTA CREATA LA VIRTUAL MACHINE FARLA PARTIRE (chiederà da dove avviare il sistema)
+SI SELEZIONA LA ISO CONTENENTE l'OS  2020-02-12-rpd-x86-buster.iso
+
+SELEZIONARE INSTALLAZIONE E SEGUIRE LE ISTRUZIONI
+
+ALLA FINE SI AVRA' RaspberryOS installato in una VM
+IL SISTEMA SI RIAVVIERA' E CHIEDERA' DI INSTALLARE GLI AGGIORNAMENTI
+
+NOTA Per uscire dalla modalità puntatore premere ctrl (quello a destra).
+http://www.penguintutor.com/raspberrypi/rpi-desktop-virtualbox
+
+INSTALLARE Additions
+cd /media/cdrom0
+sudo bash VBoxLinuxAdditions.run
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+CONFIGURARE LA RETE PER LA VIRTUAL MACHINE BRIDGE
+Questo consente di accedere a Raspberry OS della macchina virtuale come se fosse collegato alla rete del pc
+Sulle impostazioni della scheda di rete importare una scheda con bridge e selezionare la scheda di rete.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+Montare il CD con le addons. 
+Eseguire lo scripti di installazione delle VBoxLinuxAdditions
+sudo bash VBoxLinuxAdditions.run per pemettere il copia e incolla sul pc della macchina virtuale
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+Installato gitbash (con git for windows)
+https://gitforwindows.org/
+che serve per avere ssh con cui collegarsi alla scheda Raspberry Pi OS con RaspberryPiOS (arm)
+o alla macchina virtuale con RaspberryPiOS (x86)
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+SE AVETE RASPBERRY PI POTETE SCARICARE IL SISTEMA OPERATIVO DA 
+https://www.raspberrypi.org/downloads/raspberry-pi-os/
+
+E SELEZIONARE Raspberry Pi OS (32-bit) with desktop and recommended software
+
+Questo è il sistema operativo che può essere installato sulla scheda vera (ARM)
+
+Scaricare il 2019-09-26-raspbian-buster-full.img
+A me funzione solo lo zip che non si scomprime in modo corretto!
+Masterizzare con il programma BalenaEtcher
+
+inserire nel disco di boot un file vuoto di nome ssh
+inserire nel disco di boot un file wpa_supplicant.conf
+ o modificarlo dopo in /etc/wpa_supplicant/wpa_supplicant.conf
+
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=IT
+
+network={
+  ssid="hua"
+  psk="alesara147"
+}
+
+network={
+  ssid="Wind3 HUB-2D8E61"
+  psk="3bqaup03odlw2kua"
+}
+
+//////////////////////////////////
+Utente standard rasperry è
+utente: pi
+password: raspberry
+
+//////////////////////////////////
+RECOVER PASSWORD
+https://howtoraspberrypi.com/recover-password-raspberry-pi/
+In genere basta prendere la scheda ssd e infilarla in un sistema operativo che capisce il file 
+system (ad esempio linux) e modificare il file di configurazione della rete visto sopra con i 
+//////////////////////////////////
+
+
+////////////////////////////////////
+INSERIRE L'UTENTE ROOT
+
+sudo passwd
+password l'ho chiamata root
+
+////////////////////////////////////
+
+// Se mi collego con hotspot cellulare posso vedere le connessioni e 
+// gli indirizzi IP assegnati
+//scan per vedere gli indirizzi ip
+for /L %i in (1,1,255) do ping -n 1 -w 250 192.168.1.%i >> ipaddress.txt
+
+//Per collegarsi con ssh uso 
+ssh pi@192.168.43.52 
+oppure
+ssh 192.168.43.52 -l pi
+e poi insersco la password raspberry
+
+//////////////////////////////////
+// IO HO UN HOTSPOT WIFY CHE CHIAMO "Saponetta"
+http://192.168.1.1/
+SSID:	WIND WiFi-4c90
+password: 16086640
+login: admin
+password: admin
+//////////////////////////////////
+Per configurare altre uso raspi-config
+
+
+//////////////////////////////////
+Modificare il nome dell'host 
+sudo raspi-config
+Selezionare dalle opzioni hostname ad esempio newtonpi-0
+
+//////////////////////////////////
+INSTALLARE APACHE E PHP
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install apache2 -y
+sudo apt-get install php7.1
+
+sudo service apache2 restart
+
+Directory html
+cd /var/www/html/
+
+//////////////////////////////////
+far partire il WEB SEVER
+sudo /etc/init.d/apache2 start
+oppure
+sudo service apache2 start
+sudo service apache2 restart
+oppure
+sudo start apache2
+
+
+//////////////////////////////////
+Configurare la raspberry con la seriale
+1) Si apre il file config.txt
+2) Alla fine inserire dtoverlay=dwc2
+3) Aprire il file cmdline.txt
+4) dwc_otg.lpm_enable=0 console=serial0,115200 console=tty root/dev/mmcblk0p2 rootfstype=ext4
+elevator=deadline fack.repair=yes rootwait quiet init=/usr/lib/raspi-config/init_resize.sh
+
+//////////////////////////////////
+
+//////////////////////////////////
+Immaginiamo di avere il server VNC collegato
+all'indirizzo IP
+192.168.43.81
+Mi collego con 192.168.43.81
+Nome RASPI
+//////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+SIA CHE ABBIATE LA SCHEDA CHE LA MACCHINA VIRTUALE
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+Configurare ssh server in modo da accettare le richieste (usare ad esempio Raspberry Pi Configuration)
+oppure 
+sudo systemctl enable ssh
+sudo systemctl start ssh
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+GUardare l'indirizzo IP con ifconfig della macchina Linux (ex 192.168.1.212)
+collegarsi da GitBash con ssh pi@192.168.1.212
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+INSTALLARE NODE JS
+sudo apt-get update
+sudo apt-get dist-upgrade
+
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+
+sudo apt-get install -y nodejs
+
+
+PER INSTALLARE NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+lo mette nella directory ~/.nvm  e aggiunge nvm al path
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+nvm --version
+
+nvm install node
+
+node --version
+
+nvm install --lts
+nvm install 8.9.4
+
+nvm ls
+
+nvm use 10.21.0 
+
+sudo apt remove nodejs
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+Primo esempio in nodejs: la lettura dei dati da tastiera
+e stampa a schermo di informazioni.
+lettura_tastiera.js
+https://blog.fullstacktraining.com/capturing-user-input-in-a-node-js-application/
+
+Analogamente sulla raspberry pi si può fare partire il programma e aspettare che parta: è lento
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+Secondo esempio in nodejs su RasPI: accensione e spegnimento di un led
+
+Si deve installare la libreria per accesso ai pin
+npm install onoff
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+Terzo esempio in nodejs su RasPI: Accendere un led alla pressione di un tasto
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+Quarto esempio in nodejs su RasPI: collegamento a i2-c bus
+Per configurare la porta i2c uso il comando
+sudo raspy-config e vado in Interface-Options
+
+oppure in /boot/config.txt e alla voce 
+dtparam=i2c_arm=on // tolgo il commento
+dtparam=i2c_arm_baudrate=400000 // Se voglio cambiare la velocità
+
+In sudo nano /etc/modules deve trovarsi 
+i2c-dev se si vuole che la i2c parta al boot
+
+Posso 
+sudo adduser pi i2c 
+per fare in modo che la i2c appartenga all'utente pi 
+sudo usermod -a -G gpio <username>
+
+
+Riavvio la macchina
+
+PER VEDERE I DISPOSITIVI ATTACCATI installare sudo apt-get install i2c-tools
+sudo i2cdetect -y 1
+sudo i2cdetect -l // Lista dei devices
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+ESPRUINO per far funzionare javascript in Esp8266 e esp32
+https://www.espruino.com/
+
+Si può scaricare un IDE o usare direttamente quello come plugin del browser EepWeb IDE.
+https://www.espruino.com/Download
+
+Sul sito si trova la lista dei frmware delle board: scelgliee per esp8266 tutti i file contenuti
+Release: espruino_2v08_esp8266_4mb/ (Directory)
+
+//PROGETTI
+https://www.espruino.com/Home+Automation
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+https://farelettronica.it/web/mqtt-e-meraviglioso-utilizziamolo-per-i-nostri-dispositivi-iot-con-raspberry-pi/
+
+https://www.circuitbasics.com/how-to-set-up-the-dht11-humidity-sensor-on-the-raspberry-pi/
+
+// Wiring per collegarsi a HT11
+https://www.npmjs.com/package/node-wiring-
+
+// Usare sensore temperatura i2c bme280
+https://www.raspberrypi-spy.co.uk/2016/07/using-bme280-i2c-temperature-pressure-sensor-in-python/
+// Driver per nodejs
+https://www.npmjs.com/package/bme280
+//  Driver per i2c
+https://www.npmjs.com/package/rpio
+
+https://www.npmjs.com/package/i2c-bus
+
+///////////////////////////////////////////////////////////////////
+// Sensori con raspberry
+///////////////////////////////////////////////////////////////////
+https://pimylifeup.com/category/raspberry-pi-sensors/
+
+
+///////////////////////////////////////////////////////////////////
+https://www.npmjs.com/package/bme280
+///////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+MOSQUITTO
+
+
+
+
+https://tutorials-raspberrypi.com/raspberry-pi-sensors-overview-50-important-components/

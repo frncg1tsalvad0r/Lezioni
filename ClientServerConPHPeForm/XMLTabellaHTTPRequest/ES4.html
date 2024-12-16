@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function premuto() {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                let parser = new DOMParser();
+                let xmlDoc = parser.parseFromString(xhr.response, 'text/xml');
+
+                // var xmlDoc = xhr.responseXML;
+                var table="<table  border='1px'><tr><th>Nome</th><th>Cognome</th><th>Eta</th></tr>";
+                var x = xmlDoc.getElementsByTagName("studente");
+
+                // Inserire qui il codice mancante per la compilazione della tabella HTML
+                // con i dati ricevuti dal servere in formato XML
+
+                table += "</table>";
+                const contenitore = document.getElementById('contenitore');
+                contenitore.innerHTML = table;
+            };
+            xhr.open('GET', 'ES4.xml');
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <div id="contenitore"></div>
+    <button onclick="premuto()">
+        Invia
+    </button>
+</body>
+</html>

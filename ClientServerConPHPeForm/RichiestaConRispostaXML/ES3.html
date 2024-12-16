@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function premuto() {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                let parser = new DOMParser();
+                let xmlDoc = parser.parseFromString(xhr.response, 'text/xml');
+
+                // var xmlDoc = xhr.responseXML;
+                var table="<table  border='1px'>";
+                var studenti = xmlDoc.getElementsByTagName("studente");
+
+                const nome = document.getElementById('nome');
+                const cognome = document.getElementById('cognome');
+                const eta = document.getElementById('eta');
+
+                var studente = studenti[0];
+
+                let studenteVal = studente.getElementsByTagName("nome")[0].childNodes[0].nodeValue;
+                let cognomeVal = studente.getElementsByTagName("cognome")[0].childNodes[0].nodeValue;
+                let etaVal = studente.getElementsByTagName("eta")[0].childNodes[0].nodeValue;
+
+                nome.innerText = studenteVal;
+                cognome.innerText = cognomeVal;
+                eta.innerText = etaVal;
+                
+            };
+            xhr.open('GET', 'ES3.xml');
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <div id="contenitore"></div>
+    <label>Nome:</label><span id="nome"></span><br><br>
+    <label>Cognome:</label><span id="cognome"></span><br><br>
+    <label>Eta:</label><span id="eta"></span><br><br>
+    <button onclick="premuto()">
+        Invia
+    </button>
+</body>
+</html>

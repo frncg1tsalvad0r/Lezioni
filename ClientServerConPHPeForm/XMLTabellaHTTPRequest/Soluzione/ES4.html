@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        function premuto() {
+            const xhr = new XMLHttpRequest();
+
+            xhr.onload = function () {
+                const parser = new DOMParser();
+                let xmlDoc = parser.parseFromString(xhr.responseText, 'text/xml');
+                
+                let tabellaHTML = '<table border="1px"><tr><th>NOME</th><th>COGNOME</th><th>ETà</th></tr>'
+                let studenti = xmlDoc.getElementsByTagName('studente');
+
+                // compongo il testo html della tabella 
+                for(let i = 0; i < studenti.length; i++) {
+                    tabellaHTML += '<tr>';
+                    
+                    let studente = studenti[i];
+                    let nomeText = studente.getElementsByTagName('nome')[0].childNodes[0].nodeValue;
+                    tabellaHTML += '<td>' + nomeText + '</td>';
+
+                    let cognomeText = studente.getElementsByTagName('cognome')[0].childNodes[0].nodeValue;
+                    tabellaHTML += '<td>' + cognomeText + '</td>';
+
+                    let etaText = studente.getElementsByTagName('eta')[0].childNodes[0].nodeValue;
+                    tabellaHTML += '<td>' + etaText + '</td>';
+
+                    tabellaHTML += '</tr>';
+                }
+                tabellaHTML += '</table>';
+
+                document.getElementById('contenitore').innerHTML = tabellaHTML;
+            }
+            xhr.open('GET', 'es4.xml');
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <h1>Studenti</h1>
+    <div id="contenitore">
+        <!-- la tabella con i dati letti dal server -->
+        <!-- <table>
+            <fdskjhds></fdskjhds>
+        </table> -->
+    </div>
+    <button onclick="premuto()">Recupera dati</button>    
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<studenti>
+    <studente>
+        <nome>
+            Mario
+        </nome>
+        <cognome>
+            Rossi
+        </cognome>
+        <eta>
+            20
+        </eta>
+    </studente>
+    <studente>
+        <nome>
+            Anna
+        </nome>
+        <cognome>
+            Bianchi
+        </cognome>
+        <eta>
+            21
+        </eta>
+    </studente>
+</studenti>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function invia() {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                const nome = document.getElementById('nome');
+                const cognome = document.getElementById('cognome');
+                const eta = document.getElementById('eta');
+                let dati = this.responseText.split(',');
+                nome.innerText = dati[0];
+                cognome.innerText = dati[1];
+                eta.innerText = dati[2];
+            };
+            xhr.open('GET', 'ES2.php');
+            xhr.send();
+        }
+    </script>
+    <style>
+        .label {
+            font-size: 1.5rem;
+            color: blue;
+        }
+        .dato {
+            font-size: 1.5rem;
+            color: brown;
+        }
+    </style>
+</head>
+<body>
+    <h1>Esercizi Richiesta dati con HMLHttpRequest</h1>
+    <label class="label">Nome:</label><span class="dato" id="nome"></span></body><br><br>
+    <label class="label">Cognome:</label><span class="dato" id="cognome"></span></body><br><br>
+    <label class="label">Eta:</label><span class="dato" id="eta"></span></body><br><br>
+    
+    <button onclick="invia()">
+        Invia
+    </button>
+</body>
+</html>

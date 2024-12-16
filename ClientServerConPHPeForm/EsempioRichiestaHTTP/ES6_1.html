@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function caricato() {
+            let moduloObj = document.getElementById('modulo');
+            moduloObj.addEventListener('submit', premuto);
+        }
+
+        function premuto(e) {
+            e.preventDefault();
+            
+            const xhr = new XMLHttpRequest();
+            let FD = new FormData();
+            let ricercaObj = document.getElementById('ricerca');
+            FD.append('ricerca', ricercaObj.value)
+            
+            xhr.onload = function () {
+
+                var parser = new DOMParser();
+                var xmlDOM = parser.parseFromString(xhr.responseText, 'text/xml');
+
+                const errorNode = doc.querySelector('parsererror');
+                if (errorNode) {
+                    alert('Errore parsing');
+                    return;
+                } 
+
+                var t='<table  border="1px">';
+                t +='<tr><th>ID</th><th>Locazione</th></tr>';
+  
+                let stazioni = xmlDOM.getElementsByTagName('stazione');
+                for(let i = 0; i < stazioni.length; i++) {
+                    t+='<tr>';
+                    t+='<td>' + stazioni[i].getElementsByTagName('ID')[0].childNodes[0].nodeValue + '</td>';
+                    t+='<td>' + stazioni[i].getElementsByTagName('locazione')[0].childNodes[0].nodeValue + '</td>';
+                    t+='</tr>'; 
+
+                }
+
+                t += "</table>";
+                const contenitoreObj = document.getElementById('contenitore');
+                contenitoreObj.innerHTML = t;
+            };
+            xhr.open('POST', 'ES6_1.php');
+            xhr.send(FD);
+        }
+    </script>
+</head>
+<body onload="caricato()">
+    <h1>Ricerca su database</h1>
+    <form id="modulo">
+        Ricerca: <input id="ricerca" placeholder="dato da ricercare" type="text"><br><br>
+        <button type="submit">Invia</button>
+    </form><br>
+    <div id="contenitore"></div>
+</body>
+</html>
